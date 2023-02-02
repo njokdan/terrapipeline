@@ -1,0 +1,37 @@
+# YAML pipeline definition
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  BuildConfiguration: Release
+
+steps:
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download Build Artifacts'
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'drop'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build .NET Application'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish .NET Application'
+  inputs:
+    command: 'publish'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+- task: AzureWebApp@1
+  displayName: 'Deploy .NET Application to Azure Web App Service'
+  inputs:
+    azureSubscription: '<Your Azure Subscription Name>'
+    appType: 'webApp'
+    appName: '<Your Web App Service Name>'
+    package: '$(Build.ArtifactStagingDirectory)'
+
