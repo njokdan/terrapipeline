@@ -30,8 +30,8 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploy .NET Application to Azure Web App Service'
   inputs:
-    azureSubscription: '<Your Azure Subscription Name>'
+    azureSubscription: 'Visual Studio Enterprise Subscription'
     appType: 'webApp'
-    appName: '<Your Web App Service Name>'
+    appName: 'dotnetappi1'
     package: '$(Build.ArtifactStagingDirectory)'
 
